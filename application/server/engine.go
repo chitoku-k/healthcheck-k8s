@@ -54,7 +54,7 @@ func (e *engine) Start() {
 				return
 			}
 			if err != nil {
-				logrus.Errorln("Error in health check: %s", err.Error())
+				logrus.Errorln("Error in health check:", err.Error())
 				c.String(http.StatusInternalServerError, fmt.Sprintf(`Internal server error while processing node "%s".`, node))
 				return
 			}
