@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"strings"
 
@@ -37,6 +38,7 @@ func (e *engine) Start() {
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		Formatter: e.Formatter(),
 		SkipPaths: []string{"/healthz"},
 	}))
 
@@ -73,4 +75,55 @@ func (e *engine) Start() {
 	})
 
 	router.Run(":" + e.Port)
+}
+
+func (e *engine) Formatter() gin.LogFormatter {
+	return func(param gin.LogFormatterParams) string {
+		remoteHost, _, err := net.SplitHostPort(param.Request.RemoteAddr)
+		if remoteHost == "" || err != nil {
+			remoteHost = "-"
+		}
+
+		bodySize := fmt.Sprintf("%v", param.BodySize)
+		if param.BodySize == 0 {
+			bodySize = "-"
+		}
+
+		referer := param.Request.Header.Get("Referer")
+		if referer == "" {
+			referer = "-"
+		}
+
+		userAgent := param.Request.Header.Get("User-Agent")
+		if userAgent == "" {
+			userAgent = "-"
+		}
+
+		forwardedFor := param.Request.Header.Get("X-Forwarded-For")
+		if forwardedFor == "" {
+			forwardedFor = "-"
+		}
+
+		nodeName := param.Request.Header.Get(e.HeaderName)
+		if nodeName == "" {
+			nodeName = "-"
+		}
+
+		return fmt.Sprintf(`%s %s %s [%s] "%s %s %s" %v %s "%s" "%s" "%s" "%s"%s`,
+			remoteHost,
+			"-",
+			"-",
+			param.TimeStamp.Format("02/Jan/2006:15:04:05 -0700"),
+			param.Request.Method,
+			param.Request.RequestURI,
+			param.Request.Proto,
+			param.StatusCode,
+			bodySize,
+			referer,
+			userAgent,
+			forwardedFor,
+			nodeName,
+			"\n",
+		)
+	}
 }
