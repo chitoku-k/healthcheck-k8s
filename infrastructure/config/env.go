@@ -47,7 +47,7 @@ func Get() (Environment, error) {
 		if err != nil {
 			return env, fmt.Errorf("timeout is invalid: %w", err)
 		}
-		env.Timeout = time.Duration(t)
+		env.Timeout = time.Duration(t) * time.Millisecond
 	} else {
 		env.Timeout = 30000 * time.Millisecond
 	}
