@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -51,8 +50,13 @@ func (e *engine) Start() {
 
 		for _, node := range h {
 			res, err := e.HealthCheck.Do(c, node)
-			if errors.Is(err, service.ErrNotFound) {
+			if service.IsNotFound(err) {
 				c.String(http.StatusNotFound, fmt.Sprintf(`Node "%s" was not found.`, node))
+				return
+			}
+			if service.IsTimeout(err) {
+				logrus.Errorln("Error in health check:", err.Error())
+				c.String(http.StatusGatewayTimeout, fmt.Sprintf(`Timed out while processing node "%s".`, node))
 				return
 			}
 			if err != nil {
