@@ -73,6 +73,7 @@ Node "minikube" is currently undergoing maintenance.
 | 404    | Node was not found.                           |
 | 500    | Unexpected error when retrieving node status. |
 | 503    | Node is unschedulable.                        |
+| 504    | Timed out connecting to kube-apiserver.       |
 
 [workflow-link]:    https://github.com/chitoku-k/healthcheck-k8s/actions?query=branch:master
 [workflow-badge]:   https://img.shields.io/github/workflow/status/chitoku-k/healthcheck-k8s/CI%20Workflow/master.svg?style=flat-square
