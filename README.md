@@ -14,7 +14,7 @@ code.
 ## Installation
 
 ```sh
-$ go build
+$ docker buildx build .
 ```
 
 ```sh
