@@ -1,6 +1,8 @@
+Dockerfile
 LICENSE
 README.md
 healthcheck-k8s
+.dockerignore
 .git
 .github
 .gitignore
