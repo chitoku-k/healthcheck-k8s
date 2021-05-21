@@ -2,6 +2,7 @@ Dockerfile
 LICENSE
 README.md
 healthcheck-k8s
+vendor
 .dockerignore
 .git
 .github
