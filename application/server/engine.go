@@ -29,9 +29,10 @@ func NewEngine(
 	healthCheck service.HealthCheck,
 ) Engine {
 	return &engine{
-		Port:        port,
-		HeaderName:  headerName,
-		HealthCheck: healthCheck,
+		Port:           port,
+		HeaderName:     headerName,
+		TrustedProxies: trustedProxies,
+		HealthCheck:    healthCheck,
 	}
 }
 
