@@ -12,9 +12,10 @@ import (
 )
 
 type engine struct {
-	Port        string
-	HeaderName  string
-	HealthCheck service.HealthCheck
+	Port           string
+	HeaderName     string
+	TrustedProxies []string
+	HealthCheck    service.HealthCheck
 }
 
 type Engine interface {
@@ -24,6 +25,7 @@ type Engine interface {
 func NewEngine(
 	port string,
 	headerName string,
+	trustedProxies []string,
 	healthCheck service.HealthCheck,
 ) Engine {
 	return &engine{
@@ -35,6 +37,7 @@ func NewEngine(
 
 func (e *engine) Start() {
 	router := gin.New()
+	router.TrustedProxies = e.TrustedProxies
 	router.Use(gin.Recovery())
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		Formatter: e.Formatter(),
@@ -72,6 +75,10 @@ func (e *engine) Start() {
 		}
 
 		c.String(http.StatusOK, fmt.Sprintf(`Node(s) are OK: "%s"`, strings.Join(h, `", "`)))
+	})
+
+	router.Any("/ip", func(c *gin.Context) {
+		c.String(http.StatusOK, c.ClientIP())
 	})
 
 	router.Any("/healthz", func(c *gin.Context) {

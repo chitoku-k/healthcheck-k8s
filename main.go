@@ -35,6 +35,6 @@ func main() {
 	}
 
 	healthCheck := k8s.NewHealthCheckService(clientset)
-	engine := server.NewEngine(env.Port, env.HeaderName, healthCheck)
+	engine := server.NewEngine(env.Port, env.HeaderName, env.TrustedProxies, healthCheck)
 	engine.Start()
 }

@@ -9,20 +9,23 @@ import (
 )
 
 type Environment struct {
-	Port       string
-	HeaderName string
-	KubeConfig string
-	Timeout    time.Duration
+	Port           string
+	HeaderName     string
+	KubeConfig     string
+	Timeout        time.Duration
+	TrustedProxies []string
 }
 
 func Get() (Environment, error) {
 	var missing []string
 	var env Environment
 	var timeout string
+	var trustedProxies string
 
 	for k, v := range map[string]*string{
-		"KUBECONFIG": &env.KubeConfig,
-		"TIMEOUT_MS": &timeout,
+		"KUBECONFIG":       &env.KubeConfig,
+		"TIMEOUT_MS":       &timeout,
+		"TRUESTED_PROXIES": &trustedProxies,
 	} {
 		*v = os.Getenv(k)
 	}
@@ -50,6 +53,10 @@ func Get() (Environment, error) {
 		env.Timeout = time.Duration(t) * time.Millisecond
 	} else {
 		env.Timeout = 30000 * time.Millisecond
+	}
+
+	if trustedProxies != "" {
+		env.TrustedProxies = strings.Split(trustedProxies, ",")
 	}
 
 	return env, nil
