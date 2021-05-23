@@ -29,6 +29,9 @@ export KUBECONFIG=$HOME/.kube/config
 
 # Timeout in milliseconds (optional; zero means infinity)
 export TIMEOUT_MS=30000
+
+# IPv4/IPv6 addresses of trusted proxies in CIDR (optional; comma-separated)
+export TRUESTED_PROXIES=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 ```
 
 ## Usage
