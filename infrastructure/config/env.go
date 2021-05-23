@@ -23,9 +23,9 @@ func Get() (Environment, error) {
 	var trustedProxies string
 
 	for k, v := range map[string]*string{
-		"KUBECONFIG":       &env.KubeConfig,
-		"TIMEOUT_MS":       &timeout,
-		"TRUESTED_PROXIES": &trustedProxies,
+		"KUBECONFIG":      &env.KubeConfig,
+		"TIMEOUT_MS":      &timeout,
+		"TRUSTED_PROXIES": &trustedProxies,
 	} {
 		*v = os.Getenv(k)
 	}
