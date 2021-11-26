@@ -38,7 +38,7 @@ func NewEngine(
 
 func (e *engine) Start() {
 	router := gin.New()
-	router.TrustedProxies = e.TrustedProxies
+	router.SetTrustedProxies(e.TrustedProxies)
 	router.Use(gin.Recovery())
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		Formatter: e.Formatter(),
