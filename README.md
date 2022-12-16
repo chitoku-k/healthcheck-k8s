@@ -79,4 +79,4 @@ Node "minikube" is currently undergoing maintenance.
 | 504    | Timed out connecting to kube-apiserver.       |
 
 [workflow-link]:    https://github.com/chitoku-k/healthcheck-k8s/actions?query=branch:master
-[workflow-badge]:   https://img.shields.io/github/workflow/status/chitoku-k/healthcheck-k8s/CI%20Workflow/master.svg?style=flat-square
+[workflow-badge]:   https://img.shields.io/github/actions/workflow/status/chitoku-k/healthcheck-k8s/ci.yml?branch=master&style=flat-square
