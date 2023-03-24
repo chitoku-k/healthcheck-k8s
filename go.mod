@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/sirupsen/logrus v1.9.0
-	k8s.io/apimachinery v0.26.2
+	k8s.io/apimachinery v0.26.3
 	k8s.io/client-go v0.26.2
 )
 
