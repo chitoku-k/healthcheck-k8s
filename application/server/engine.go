@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"net/textproto"
 	"strings"
 
 	"github.com/chitoku-k/healthcheck-k8s/service"
@@ -30,7 +31,7 @@ func NewEngine(
 ) Engine {
 	return &engine{
 		Port:           port,
-		HeaderName:     headerName,
+		HeaderName:     textproto.CanonicalMIMEHeaderKey(headerName),
 		TrustedProxies: trustedProxies,
 		HealthCheck:    healthCheck,
 	}
@@ -46,8 +47,8 @@ func (e *engine) Start() {
 	}))
 
 	router.Any("/", func(c *gin.Context) {
-		h, ok := c.Request.Header[e.HeaderName]
-		if !ok {
+		h := c.Request.Header.Values(e.HeaderName)
+		if len(h) == 0 {
 			c.String(http.StatusBadRequest, fmt.Sprintf(`Header "%s" was not specified.`, e.HeaderName))
 			return
 		}
