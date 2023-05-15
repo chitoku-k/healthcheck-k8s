@@ -34,6 +34,21 @@ export TIMEOUT_MS=30000
 export TRUSTED_PROXIES=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 ```
 
+## Testing
+
+### Set up
+
+```sh
+$ make setup-envtest
+```
+
+### Run
+
+```sh
+$ source <(bin/setup-envtest use latest -p env)
+$ go test ./...
+```
+
 ## Usage
 
 ```sh
