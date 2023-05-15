@@ -27,3 +27,18 @@ jobs:
         run: |
           rm -rf /tmp/buildx-cache
           mv /tmp/buildx-cache{.new,}
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+      - name: Set up envtest
+        run: |
+          make setup-envtest
+      - name: Run tests
+        run: |
+          source <(bin/setup-envtest use latest -p env)
+          go test ./...
