@@ -11,7 +11,6 @@ import (
 type Environment struct {
 	Port           string
 	HeaderName     string
-	KubeConfig     string
 	Timeout        time.Duration
 	TrustedProxies []string
 }
@@ -23,7 +22,6 @@ func Get() (Environment, error) {
 	var trustedProxies string
 
 	for k, v := range map[string]*string{
-		"KUBECONFIG":      &env.KubeConfig,
 		"TIMEOUT_MS":      &timeout,
 		"TRUSTED_PROXIES": &trustedProxies,
 	} {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/chitoku-k/healthcheck-k8s/application/server"
 	"github.com/chitoku-k/healthcheck-k8s/infrastructure/config"
@@ -18,8 +19,11 @@ func main() {
 	}
 
 	var config *rest.Config
-	if env.KubeConfig != "" {
-		config, err = clientcmd.BuildConfigFromFlags("", env.KubeConfig)
+	kubeconfigPath := clientcmd.NewDefaultPathOptions().GetDefaultFilename()
+
+	_, err = os.Stat(kubeconfigPath)
+	if !os.IsNotExist(err) {
+		config, err = clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 	} else {
 		config, err = rest.InClusterConfig()
 	}
