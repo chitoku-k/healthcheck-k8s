@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 
 	"github.com/chitoku-k/healthcheck-k8s/application/server"
 	"github.com/chitoku-k/healthcheck-k8s/infrastructure/config"
@@ -12,7 +14,12 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+var signals = []os.Signal{os.Interrupt}
+
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), signals...)
+	defer stop()
+
 	env, err := config.Get()
 	if err != nil {
 		panic(fmt.Errorf("failed to initialize config: %w", err))
@@ -40,5 +47,8 @@ func main() {
 
 	healthCheck := k8s.NewHealthCheckService(clientset)
 	engine := server.NewEngine(env.Port, env.HeaderName, env.TrustedProxies, healthCheck)
-	engine.Start()
+	err = engine.Start(ctx)
+	if err != nil {
+		panic(fmt.Errorf("failed to start web server: %v", err))
+	}
 }
