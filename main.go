@@ -14,7 +14,11 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-var signals = []os.Signal{os.Interrupt}
+var (
+	signals = []os.Signal{os.Interrupt}
+	name    = "healthcheck-k8s"
+	version = "v0.0.0-dev"
+)
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), signals...)
@@ -40,6 +44,8 @@ func main() {
 	}
 
 	config.Timeout = env.Timeout
+	config.UserAgent = name + "/" + version
+
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(fmt.Errorf("failed to initialize clientset: %w", err))
