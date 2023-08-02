@@ -29,7 +29,7 @@ jobs:
           cache-to: type=gha,mode=max
           load: true
           tags: container.chitoku.jp/chitoku-k/healthcheck-k8s
-          args: |
+          build-args: |
             TAGS=authless
             VERSION=${{ steps.version.outputs.version }}
       - name: Set up ID token
