@@ -1,6 +1,9 @@
 package k8s_test
 
 import (
+	"context"
+	"time"
+
 	"github.com/chitoku-k/healthcheck-k8s/infrastructure/k8s"
 	"github.com/chitoku-k/healthcheck-k8s/service"
 	. "github.com/onsi/ginkgo/v2"
@@ -8,10 +11,14 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	applycorev1 "k8s.io/client-go/applyconfigurations/core/v1"
+	"k8s.io/client-go/informers"
 )
 
 var _ = Describe("HealthCheckService", func() {
 	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+
 		node1ApplyConfiguration *applycorev1.NodeApplyConfiguration
 		node2ApplyConfiguration *applycorev1.NodeApplyConfiguration
 		healthCheckService      service.HealthCheck
@@ -26,7 +33,19 @@ var _ = Describe("HealthCheckService", func() {
 			WithSpec(applycorev1.NodeSpec().
 				WithUnschedulable(true))
 
-		healthCheckService = k8s.NewHealthCheckService(clientset)
+		informerFactory := informers.NewSharedInformerFactory(clientset, 30*time.Second)
+		nodeLister := informerFactory.Core().V1().Nodes().Lister()
+
+		ctx, cancel = context.WithCancel(context.Background())
+		informerFactory.Start(ctx.Done())
+
+		Expect(informerFactory.WaitForCacheSync(context.Background().Done())).To(HaveEach(BeTrue()))
+
+		healthCheckService = k8s.NewHealthCheckService(nodeLister)
+	})
+
+	AfterEach(func() {
+		cancel()
 	})
 
 	Context("Do()", func() {

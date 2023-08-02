@@ -8,22 +8,21 @@ import (
 
 	"github.com/chitoku-k/healthcheck-k8s/service"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
+	listercorev1 "k8s.io/client-go/listers/core/v1"
 )
 
 type healthCheckService struct {
-	Clientset kubernetes.Interface
+	nodeLister listercorev1.NodeLister
 }
 
-func NewHealthCheckService(clientset kubernetes.Interface) service.HealthCheck {
+func NewHealthCheckService(nodeLister listercorev1.NodeLister) service.HealthCheck {
 	return &healthCheckService{
-		Clientset: clientset,
+		nodeLister: nodeLister,
 	}
 }
 
 func (s *healthCheckService) Do(ctx context.Context, nodeName string) (bool, error) {
-	node, err := s.Clientset.CoreV1().Nodes().Get(ctx, nodeName, metav1.GetOptions{})
+	node, err := s.nodeLister.Get(nodeName)
 	if apierrors.IsNotFound(err) {
 		return false, service.NewNotFoundError(err)
 	}
