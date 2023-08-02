@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/chitoku-k/healthcheck-k8s/service"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/sync/errgroup"
 )
 
 type engine struct {
@@ -20,7 +22,7 @@ type engine struct {
 }
 
 type Engine interface {
-	Start()
+	Start(ctx context.Context) error
 }
 
 func NewEngine(
@@ -37,7 +39,7 @@ func NewEngine(
 	}
 }
 
-func (e *engine) Start() {
+func (e *engine) Start(ctx context.Context) error {
 	router := gin.New()
 	router.SetTrustedProxies(e.TrustedProxies)
 	router.Use(gin.Recovery())
@@ -87,7 +89,23 @@ func (e *engine) Start() {
 		c.String(http.StatusOK, "OK")
 	})
 
-	router.Run(":" + e.Port)
+	server := http.Server{
+		Addr:    net.JoinHostPort("", e.Port),
+		Handler: router,
+	}
+
+	var eg errgroup.Group
+	eg.Go(func() error {
+		<-ctx.Done()
+		return server.Shutdown(context.Background())
+	})
+
+	err := server.ListenAndServe()
+	if err == http.ErrServerClosed {
+		return eg.Wait()
+	}
+
+	return err
 }
 
 func (e *engine) Formatter() gin.LogFormatter {
