@@ -30,6 +30,7 @@ jobs:
           load: true
           tags: container.chitoku.jp/chitoku-k/healthcheck-k8s
           args: |
+            TAGS=authless
             VERSION=${{ steps.version.outputs.version }}
       - name: Set up ID token
         uses: actions/github-script@v6
