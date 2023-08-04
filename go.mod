@@ -8,7 +8,7 @@ require (
 	github.com/onsi/gomega v1.27.10
 	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/sync v0.3.0
-	golang.org/x/sys v0.10.0
+	golang.org/x/sys v0.11.0
 	k8s.io/api v0.27.4
 	k8s.io/apimachinery v0.27.4
 	k8s.io/client-go v0.27.4
