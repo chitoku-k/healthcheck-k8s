@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"time"
@@ -28,7 +29,8 @@ func main() {
 
 	env, err := config.Get()
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize config: %w", err))
+		slog.Error("Failed to initialize config", slog.Any("err", err))
+		os.Exit(1)
 	}
 
 	var config *rest.Config
@@ -42,7 +44,8 @@ func main() {
 	}
 
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize kubeconfig: %w", err))
+		slog.Error("Failed to initialize kubeconfig", slog.Any("err", err))
+		os.Exit(1)
 	}
 
 	config.Timeout = env.Timeout
@@ -50,7 +53,8 @@ func main() {
 
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize clientset: %w", err))
+		slog.Error("Failed to initialize clientset", slog.Any("err", err))
+		os.Exit(1)
 	}
 
 	informerFactory := informers.NewSharedInformerFactory(clientset, 0)
@@ -60,14 +64,16 @@ func main() {
 
 	err = waitForCacheSync(ctx, env.Timeout, informerFactory)
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize node cache: %w", err))
+		slog.Error("Failed to initialize node cache", slog.Any("err", err))
+		os.Exit(1)
 	}
 
 	healthCheck := k8s.NewHealthCheckService(nodeLister)
 	engine := server.NewEngine(env.Port, env.HeaderName, env.TrustedProxies, healthCheck)
 	err = engine.Start(ctx)
 	if err != nil {
-		panic(fmt.Errorf("failed to start web server: %v", err))
+		slog.Error("Failed to start web server", slog.Any("err", err))
+		os.Exit(1)
 	}
 }
 

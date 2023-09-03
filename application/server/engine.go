@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/textproto"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/chitoku-k/healthcheck-k8s/service"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -62,12 +62,12 @@ func (e *engine) Start(ctx context.Context) error {
 				return
 			}
 			if service.IsTimeout(err) {
-				logrus.Errorln("Error in health check:", err.Error())
+				slog.Error("Timeout in health check", slog.Any("err", err))
 				c.String(http.StatusGatewayTimeout, fmt.Sprintf(`Timed out while processing node "%s".`, node))
 				return
 			}
 			if err != nil {
-				logrus.Errorln("Error in health check:", err.Error())
+				slog.Error("Error in health check", slog.Any("err", err))
 				c.String(http.StatusInternalServerError, fmt.Sprintf(`Internal server error while processing node "%s".`, node))
 				return
 			}
