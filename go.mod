@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/gin-gonic/gin v1.10.0
-	github.com/onsi/ginkgo/v2 v2.17.3
+	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
 	golang.org/x/sync v0.7.0
 	golang.org/x/sys v0.20.0
@@ -72,7 +72,7 @@ require (
 	golang.org/x/term v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.20.0 // indirect
+	golang.org/x/tools v0.21.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
