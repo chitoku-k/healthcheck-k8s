@@ -41,7 +41,11 @@ func NewEngine(
 
 func (e *engine) Start(ctx context.Context) error {
 	router := gin.New()
-	router.SetTrustedProxies(e.TrustedProxies)
+	err := router.SetTrustedProxies(e.TrustedProxies)
+	if err != nil {
+		return fmt.Errorf("invalid proxies: %w", err)
+	}
+
 	router.Use(gin.Recovery())
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		Formatter: e.Formatter(),
@@ -100,7 +104,7 @@ func (e *engine) Start(ctx context.Context) error {
 		return server.Shutdown(context.Background())
 	})
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err == http.ErrServerClosed {
 		return eg.Wait()
 	}
