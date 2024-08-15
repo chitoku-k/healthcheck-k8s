@@ -1,6 +1,7 @@
 Dockerfile
 LICENSE
 README.md
+bin
 healthcheck-k8s
 .dockerignore
 .git

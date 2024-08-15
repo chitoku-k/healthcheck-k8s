@@ -1,15 +1,26 @@
 # syntax = docker/dockerfile:1
-FROM golang:1.22.6 AS build
+FROM golang:1.22.6 AS base
 WORKDIR /usr/src
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go \
     go mod download
 COPY . ./
+
+FROM base AS build
 ARG TAGS
 ARG VERSION=v0.0.0-dev
 RUN --mount=type=cache,target=/go \
     --mount=type=cache,target=/root/.cache/go-build \
     go build -tags="$TAGS" -ldflags="-s -w -X main.version=$VERSION"
+
+FROM base AS dev
+COPY --from=golangci/golangci-lint /usr/bin/golangci-lint /usr/bin
+RUN --mount=type=cache,target=/go \
+    --mount=type=cache,target=/root/.cache/go-build \
+    mkdir -p /usr/local/kubebuilder && \
+    make setup-envtest && \
+    KUBEBUILDER_ASSETS=$(bin/setup-envtest use latest --bin-dir=/usr/share/kubebuilder-envtest --print=path) && \
+    ln -s "$KUBEBUILDER_ASSETS" /usr/local/kubebuilder/bin
 
 FROM scratch
 ARG PORT=80

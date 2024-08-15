@@ -1,6 +1,9 @@
 name: CI Workflow
 on:
-  - push
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -23,14 +26,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up reviewdog
+        uses: reviewdog/action-setup@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v6
+        id: build
         with:
-          go-version-file: go.mod
-      - name: Set up envtest
-        run: |
-          make setup-envtest
+          target: dev
+          cache-from: type=gha,scope=${{ github.ref_name }}-test
+          cache-to: type=gha,scope=${{ github.ref_name }}-test,mode=max
+          load: true
       - name: Run tests
         run: |
-          source <(bin/setup-envtest use latest -p env)
-          go test ./...
+          docker run --rm ${{ steps.build.outputs.imageid }} go test ./...
+      - name: Run golangci-lint
+        if: ${{ always() && steps.build.conclusion == 'success' }}
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker run --rm ${{ steps.build.outputs.imageid }} golangci-lint run --out-format=line-number |
+            reviewdog -f=golangci-lint -reporter=github-pr-annotations -filter-mode=nofilter -fail-on-error -tee
