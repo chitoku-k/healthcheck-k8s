@@ -10,6 +10,7 @@ defaults:
 
 permissions:
   contents: read
+  packages: write
   id-token: write
 
 jobs:
@@ -25,33 +26,25 @@ jobs:
         id: version
         run: |
           echo version="$(git describe --tags --always --dirty)" >> "$GITHUB_OUTPUT"
-      - name: Build
+      - name: Log into Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and psush
         uses: docker/build-push-action@v6
         with:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          load: true
-          tags: container.chitoku.jp/chitoku-k/healthcheck-k8s
+          push: true
+          tags: |
+            ghcr.io/chitoku-k/healthcheck-k8s:latest
+            ghcr.io/chitoku-k/healthcheck-k8s:${{ github.ref_name }}
           build-args: |
             TAGS=authless
             VERSION=${{ steps.version.outputs.version }}
-      - name: Set up ID token
-        uses: actions/github-script@v7
-        id: id-token
-        with:
-          result-encoding: string
-          script: |
-            return await core.getIDToken('container.chitoku.jp');
-      - name: Log into Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: container.chitoku.jp
-          username: oidc-idtoken
-          password: ${{ steps.id-token.outputs.result }}
-      - name: Push to Container Registry
-        run: |
-          docker push container.chitoku.jp/chitoku-k/healthcheck-k8s
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -75,4 +68,4 @@ jobs:
           kubectl config use-context k8s.chitoku.jp
       - name: Rollout restart
         run: |
-          kubectl rollout restart deployment/healthcheck-k8s
+          kubectl set image deployment/healthcheck-k8s api=ghcr.io/chitoku-k/healthcheck-k8s:${{ github.ref_name }}
