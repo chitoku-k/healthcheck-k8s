@@ -8,8 +8,8 @@ require (
 	github.com/onsi/gomega v1.34.2
 	golang.org/x/sync v0.8.0
 	golang.org/x/sys v0.26.0
-	k8s.io/api v0.31.1
-	k8s.io/apimachinery v0.31.1
+	k8s.io/api v0.31.2
+	k8s.io/apimachinery v0.31.2
 	k8s.io/client-go v0.31.1
 	sigs.k8s.io/controller-runtime v0.19.0
 )
