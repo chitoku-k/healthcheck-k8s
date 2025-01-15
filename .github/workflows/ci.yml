@@ -18,12 +18,29 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Get version
+        id: version
+        run: |
+          echo version="$(git describe --tags --always --dirty)" >> "$GITHUB_OUTPUT"
+      - name: Log into Container Registry
+        if: ${{ github.ref_name == 'master' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
         uses: docker/build-push-action@v6
         with:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          push: ${{ github.ref_name == 'master' }}
+          tags: |
+            ghcr.io/chitoku-k/healthcheck-k8s:latest
+          build-args: |
+            TAGS=authless
+            VERSION=${{ steps.version.outputs.version }}
   test:
     name: Test
     runs-on: ubuntu-latest

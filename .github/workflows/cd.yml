@@ -40,7 +40,6 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ghcr.io/chitoku-k/healthcheck-k8s:latest
             ghcr.io/chitoku-k/healthcheck-k8s:${{ github.ref_name }}
           build-args: |
             TAGS=authless
