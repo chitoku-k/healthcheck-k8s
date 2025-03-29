@@ -11,10 +11,17 @@ import (
 
 var _ = Describe("Get()", func() {
 	BeforeEach(func() {
-		os.Unsetenv("PORT")
-		os.Unsetenv("HEADER_NAME")
-		os.Unsetenv("TIMEOUT_MS")
-		os.Unsetenv("TRUSTED_PROXIES")
+		err := os.Unsetenv("PORT")
+		Expect(err).NotTo(HaveOccurred())
+
+		err = os.Unsetenv("HEADER_NAME")
+		Expect(err).NotTo(HaveOccurred())
+
+		err = os.Unsetenv("TIMEOUT_MS")
+		Expect(err).NotTo(HaveOccurred())
+
+		err = os.Unsetenv("TRUSTED_PROXIES")
+		Expect(err).NotTo(HaveOccurred())
 	})
 
 	Context("when configuration is invalid", func() {
@@ -31,9 +38,14 @@ var _ = Describe("Get()", func() {
 
 		Context("when timeout cannot be parsed", func() {
 			BeforeEach(func() {
-				os.Setenv("PORT", "8080")
-				os.Setenv("HEADER_NAME", "X-Node")
-				os.Setenv("TIMEOUT_MS", "1000ms")
+				err := os.Setenv("PORT", "8080")
+				Expect(err).NotTo(HaveOccurred())
+
+				err = os.Setenv("HEADER_NAME", "X-Node")
+				Expect(err).NotTo(HaveOccurred())
+
+				err = os.Setenv("TIMEOUT_MS", "1000ms")
+				Expect(err).NotTo(HaveOccurred())
 			})
 
 			It("returns an error", func() {
@@ -45,10 +57,17 @@ var _ = Describe("Get()", func() {
 
 	Context("when configuration is valid", func() {
 		BeforeEach(func() {
-			os.Setenv("PORT", "8080")
-			os.Setenv("HEADER_NAME", "X-Node")
-			os.Setenv("TIMEOUT_MS", "5000")
-			os.Setenv("TRUSTED_PROXIES", "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")
+			err := os.Setenv("PORT", "8080")
+			Expect(err).NotTo(HaveOccurred())
+
+			err = os.Setenv("HEADER_NAME", "X-Node")
+			Expect(err).NotTo(HaveOccurred())
+
+			err = os.Setenv("TIMEOUT_MS", "5000")
+			Expect(err).NotTo(HaveOccurred())
+
+			err = os.Setenv("TRUSTED_PROXIES", "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")
+			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("returns environment", func() {
