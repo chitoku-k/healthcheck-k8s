@@ -3,7 +3,7 @@ module github.com/chitoku-k/healthcheck-k8s
 go 1.24.1
 
 require (
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.10.1
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 	golang.org/x/sync v0.14.0
