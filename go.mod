@@ -2,6 +2,8 @@ module github.com/chitoku-k/healthcheck-k8s
 
 go 1.25
 
+toolchain go1.25.4
+
 require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/onsi/ginkgo/v2 v2.27.2
