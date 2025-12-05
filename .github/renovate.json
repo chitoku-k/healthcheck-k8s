@@ -6,6 +6,7 @@
   "labels": ["dependencies"],
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "matchManagers": ["dockerfile"],
@@ -22,7 +23,8 @@
     {
       "matchDepNames": ["go", "golang"],
       "groupName": "go",
-      "minimumGroupSize": 2
+      "minimumGroupSize": 2,
+      "rangeStrategy": "auto"
     },
     {
       "matchDepNames": [
