@@ -14,12 +14,6 @@ RUN --mount=type=cache,target=/go \
 
 FROM base AS dev
 COPY --from=golangci/golangci-lint /usr/bin/golangci-lint /usr/bin
-RUN --mount=type=cache,target=/go \
-    --mount=type=cache,target=/root/.cache/go-build \
-    mkdir -p /usr/local/kubebuilder && \
-    make setup-envtest && \
-    KUBEBUILDER_ASSETS=$(bin/setup-envtest use latest --bin-dir=/usr/share/kubebuilder-envtest --print=path) && \
-    ln -s "$KUBEBUILDER_ASSETS" /usr/local/kubebuilder/bin
 
 FROM scratch
 ARG PORT=80

@@ -45,7 +45,7 @@ $ make setup-envtest
 ### Run
 
 ```sh
-$ source <(bin/setup-envtest use latest -p env)
+$ source <(go tool setup-envtest use latest -p env)
 $ go test ./...
 ```
 
