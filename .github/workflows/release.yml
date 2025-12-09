@@ -51,8 +51,6 @@ jobs:
         uses: azure/setup-kubectl@v4
       - name: Set up kubectl context
         uses: chitoku-k/actions/setup-kubectl-context@master
-        with:
-          namespace: monitor
       - name: Update images
         run: |
           kubectl set image --field-manager=github-actions deployment/healthcheck-k8s api=ghcr.io/chitoku-k/healthcheck-k8s:${{ github.ref_name }}
