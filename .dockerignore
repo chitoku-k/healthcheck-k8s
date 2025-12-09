@@ -1,8 +1,11 @@
 Dockerfile
 LICENSE
 README.md
+docker-bake.hcl
 healthcheck-k8s
+healthcheck-k8s.exe
 .dockerignore
 .git
 .github
 .gitignore
+.golangci.yaml
