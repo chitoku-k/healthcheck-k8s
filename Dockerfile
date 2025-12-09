@@ -7,11 +7,10 @@ RUN --mount=type=cache,target=/go \
 COPY . ./
 
 FROM base AS build
-ARG TAGS
 ARG VERSION=v0.0.0-dev
 RUN --mount=type=cache,target=/go \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -tags="$TAGS" -ldflags="-s -w -X main.version=$VERSION"
+    go build -tags=authless -ldflags="-s -w -X main.version=$VERSION"
 
 FROM base AS dev
 COPY --from=golangci/golangci-lint /usr/bin/golangci-lint /usr/bin
