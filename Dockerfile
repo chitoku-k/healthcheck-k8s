@@ -33,4 +33,5 @@ COPY --link --from=build /lib64 /lib64
 COPY --link --from=build /usr/src/healthcheck-k8s /healthcheck-k8s
 COPY --link --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 EXPOSE $PORT
+RUN ["/healthcheck-k8s", "--version"]
 CMD ["/healthcheck-k8s"]
