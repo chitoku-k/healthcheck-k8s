@@ -66,11 +66,19 @@ $Env:TRUSTED_PROXIES = "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
 ## Testing
 
-### Run
+
+### Linux
 
 ```sh
 $ source <(go tool setup-envtest use latest -p env)
 $ go test ./...
+```
+
+### Windows
+
+```powershell
+> $Env:KUBEBUILDER_ASSETS = (go tool setup-envtest use latest -p path)
+> go test ./...
 ```
 
 ## Usage
