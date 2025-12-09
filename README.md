@@ -8,14 +8,25 @@ code.
 
 ## Requirements
 
-- Go
 - Kubernetes
 
-## Installation
+## Production
 
-```sh
-$ docker buildx build .
+### Container images
+
+- [ghcr.io/chitoku-k/healthcheck-k8s](https://github.com/chitoku-k/healthcheck-k8s/pkgs/container/healthcheck-k8s)
+
+```console
+$ docker buildx bake
 ```
+
+### Executables
+
+- [GitHub Releases](https://github.com/chitoku-k/healthcheck-k8s/releases)
+
+## Configurations
+
+### Linux
 
 ```sh
 # Port number (required)
@@ -34,26 +45,35 @@ export TIMEOUT_MS=30000
 export TRUSTED_PROXIES=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 ```
 
-## Testing
+### Windows
 
-### Set up
+```powershell
+# Port number (required)
+$Env:PORT = 8080
 
-```sh
-$ make setup-envtest
+# Name of header in which client sends a node name (required)
+$Env:HEADER_NAME = "X-Node"
+
+# Path to the kubeconfig, or else falls back to service account token mounted inside the Pod (optional)
+$Env:KUBECONFIG = "$Env:USERPROFILE\.kube\config"
+
+# Timeout in milliseconds (optional; zero means infinity)
+$Env:TIMEOUT_MS = 30000
+
+# IPv4/IPv6 addresses of trusted proxies in CIDR (optional; comma-separated)
+$Env:TRUSTED_PROXIES = "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 ```
+
+## Testing
 
 ### Run
 
 ```sh
-$ source <(bin/setup-envtest use latest -p env)
+$ source <(go tool setup-envtest use latest -p env)
 $ go test ./...
 ```
 
 ## Usage
-
-```sh
-$ ./healthcheck-k8s
-```
 
 ### Normal: node is schedulable
 
@@ -94,4 +114,4 @@ Node "minikube" is currently undergoing maintenance.
 | 504    | Timed out connecting to kube-apiserver.       |
 
 [workflow-link]:    https://github.com/chitoku-k/healthcheck-k8s/actions?query=branch:master
-[workflow-badge]:   https://img.shields.io/github/actions/workflow/status/chitoku-k/healthcheck-k8s/ci.yml?branch=master&style=flat-square
+[workflow-badge]:   https://img.shields.io/github/actions/workflow/status/chitoku-k/healthcheck-k8s/publish-image.yml?branch=master&style=flat-square

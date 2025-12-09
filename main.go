@@ -11,6 +11,7 @@ import (
 	"github.com/chitoku-k/healthcheck-k8s/application/server"
 	"github.com/chitoku-k/healthcheck-k8s/infrastructure/config"
 	"github.com/chitoku-k/healthcheck-k8s/infrastructure/k8s"
+	"github.com/spf13/pflag"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -21,9 +22,17 @@ var (
 	signals = []os.Signal{os.Interrupt}
 	name    = "healthcheck-k8s"
 	version = "v0.0.0-dev"
+
+	flagversion = pflag.BoolP("version", "V", false, "show version")
 )
 
 func main() {
+	pflag.Parse()
+	if *flagversion {
+		fmt.Println(name, version)
+		return
+	}
+
 	ctx, stop := signal.NotifyContext(context.Background(), signals...)
 	defer stop()
 

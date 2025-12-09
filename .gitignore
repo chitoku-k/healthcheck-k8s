@@ -17,8 +17,7 @@ healthcheck-k8s
 *.out
 
 # Dependency directories (remove the comment below to include it)
-bin/
-vendor/
+# vendor/
 
 ### Go Patch ###
 /vendor/
