@@ -10,7 +10,7 @@ require (
 	github.com/onsi/gomega v1.38.2
 	github.com/spf13/pflag v1.0.10
 	golang.org/x/sync v0.19.0
-	golang.org/x/sys v0.38.0
+	golang.org/x/sys v0.39.0
 	k8s.io/api v0.34.3
 	k8s.io/apimachinery v0.34.3
 	k8s.io/client-go v0.34.3
