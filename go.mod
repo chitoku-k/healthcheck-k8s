@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/onsi/ginkgo/v2 v2.27.2
 	github.com/onsi/gomega v1.38.2
+	github.com/spf13/pflag v1.0.10
 	golang.org/x/sync v0.18.0
 	golang.org/x/sys v0.38.0
 	k8s.io/api v0.34.2
@@ -66,7 +67,6 @@ require (
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.54.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
-	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.3.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
