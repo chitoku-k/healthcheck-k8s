@@ -35,11 +35,11 @@ func NewTimeoutError(err error) error {
 }
 
 func IsNotFound(err error) bool {
-	var e *NotFoundError
-	return errors.As(err, &e)
+	_, ok := errors.AsType[*NotFoundError](err)
+	return ok
 }
 
 func IsTimeout(err error) bool {
-	var e *TimeoutError
-	return errors.As(err, &e)
+	_, ok := errors.AsType[*TimeoutError](err)
+	return ok
 }
