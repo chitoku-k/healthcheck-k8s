@@ -7,7 +7,7 @@ toolchain go1.26.3
 require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/onsi/ginkgo/v2 v2.29.0
-	github.com/onsi/gomega v1.40.0
+	github.com/onsi/gomega v1.41.0
 	github.com/spf13/pflag v1.0.10
 	golang.org/x/sync v0.20.0
 	golang.org/x/sys v0.45.0
