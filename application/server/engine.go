@@ -60,7 +60,7 @@ func (e *engine) Start(ctx context.Context) error {
 		}
 
 		for _, node := range h {
-			res, err := e.HealthCheck.Do(c, node)
+			res, err := e.HealthCheck.Do(c.Copy(), node)
 			if service.IsNotFound(err) {
 				c.String(http.StatusNotFound, fmt.Sprintf(`Node "%s" was not found.`, node))
 				return
