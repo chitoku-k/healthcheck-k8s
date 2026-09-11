@@ -9,7 +9,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.32.1
 	github.com/onsi/gomega v1.43.0
 	github.com/spf13/pflag v1.0.10
-	golang.org/x/sync v0.22.0
+	golang.org/x/sync v0.23.0
 	golang.org/x/sys v0.47.0
 	k8s.io/api v0.37.0
 	k8s.io/apimachinery v0.37.0
