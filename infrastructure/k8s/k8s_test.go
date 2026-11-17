@@ -53,3 +53,8 @@ var _ = BeforeSuite(func(ctx SpecContext) {
 	clientset, err = kubernetes.NewForConfig(config)
 	Expect(err).NotTo(HaveOccurred())
 })
+
+var _ = AfterSuite(func() {
+	err := env.Stop()
+	Expect(err).NotTo(HaveOccurred())
+})
